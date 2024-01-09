@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html class="signup-home" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="signup.css">
+    <script src="https://kit.fontawesome.com/24e9d13143.js" crossorigin="anonymous"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="shortcut icon" href="carty.png" type="image/x-icon">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+<body class="signup signup-page nav">
+    <div class="signup-form container">
+        <h3>Signup to Carty</h3>
+
+        <div class="detail-div">
+            <label for="name">Name</label>
+            <input type="text" placeholder="John Doe" id="name">
+
+            <label for="username">Email Id</label>
+            <input type="text" placeholder="johndoe@email.com" id="email">
+
+            <label for="password">Password</label>
+            <input type="password" placeholder="Atleast 6 characters" id="password">
+
+            <div><button class="login-button" id="register">Register</button></div>
+        </div>
+        <p class="login-msg">Already a member? <a class="login-link" href="index.html">Login</a></p>
+    </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
+          authDomain: "carty-c96d8.firebaseapp.com",
+          databaseURL: "https://carty-c96d8-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "carty-c96d8",
+          storageBucket: "carty-c96d8.appspot.com",
+          messagingSenderId: "192709310913",
+          appId: "1:192709310913:web:01f48cb77aed7de229d740"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        console.log(app)
+        let flag;
+
+        //----- New Registration code start	  
+        document.getElementById("register").addEventListener("click", function() {
+            var email =  document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var name = document.getElementById("name").value;
+            //For new registration
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                user.displayName = name;
+                console.log(user);
+                showAlert("&#x2713; Registration successful!");
+                flag = "success"
+                
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ..
+                console.log(errorMessage);
+                showAlert(errorMessage)
+                flag = "error"
+            });	 		  
+        });
+        //----- End
+        function showAlert(message) {
+            let alertBox = document.createElement('div')
+            alertBox.classList.add('alert-box')
+            alertBox.id = "alert";
+            alertBox.innerHTML = message;
+            document.body.appendChild(alertBox)
+            alertBox.addEventListener('animationend', function() {
+                alertBox.classList.add('disappear')
+                if (flag == "success") {	 
+                    window.location.href = "home.html";
+                }
+            })
+        }
+      </script>
+</body>
+</html>

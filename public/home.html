@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://kit.fontawesome.com/0ba230c8bd.js" crossorigin="anonymous"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="shortcut icon" href="carty.png" type="image/x-icon">
+    <link rel="manifest" href="/site.webmanifest">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js" type="module"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div style="display: none;"><button id="load-button"></button></div>
+    <h1 class="app-title" id="app-title">Carty</h1>
+    <img src="carty.png" class="carty-img" alt="">
+    <div class="input-div container">
+        <input type="text" class="input-field" id="input-field" placeholder="Food" autofocus>
+        <button class="add-button" id="add-button">Add to Cart</button>
+        <ul class="cart-items" id="cart-items">
+        </ul>
+    </div>
+    <script src="index.js" type="module"></script>
+    <div class="logout-div" id="logout">
+        <i class="fa-solid fa-power-off logout-button"></i> <span class="logout-text">Logout</span>
+    </div>
+    <i class="fa-regular fa-sun toggler" id="toggler" onclick="lightMode()"></i>
+    <script>
+        function lightMode () {
+            document.body.classList.toggle('light');
+            var toggler = document.getElementById('toggler');
+            toggler.classList.toggle('darkColor');
+            toggler.classList.add('fa-spin');
+            setTimeout(removeSpin, 500);
+            function removeSpin() {
+                toggler.classList.remove('fa-spin');
+            }
+            document.getElementById('app-title').classList.toggle('newColor');
+        }
+    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, getIdToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
+          authDomain: "carty-c96d8.firebaseapp.com",
+          databaseURL: "https://carty-c96d8-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "carty-c96d8",
+          storageBucket: "carty-c96d8.appspot.com",
+          messagingSenderId: "192709310913",
+          appId: "1:192709310913:web:01f48cb77aed7de229d740"
+        };
+
+        // Initialize Firebase
+        const auth = getAuth();
+        console.log(auth)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/auth.user
+                const uid = user.uid;
+                console.log(user)
+                console.log(uid);
+                var userId = document.createElement('div')
+                userId.id = "user-id";
+                userId.innerHTML = uid;
+                userId.style.display = "none";
+                document.body.appendChild(userId)
+                // ...
+            } else {
+                // User is signed out
+                // ...
+                window.location.href = "index.html";
+            }
+        });
+
+        let flag;
+        //----- Logout code start	  
+        document.getElementById("logout").addEventListener("click", function() {
+            signOut(auth).then(() => {
+                // Sign-out successful.
+                console.log('Sign-out successful.');
+                showAlert('Sign-out successful.');
+                flag = "success";
+                document.getElementById('logout').style.display = 'none';
+                
+                }).catch((error) => {
+                // An error happened.
+                console.log('An error occured.');
+                showAlert(error.message)
+                flag = "error";
+                });		  		  
+        });
+        //----- End
+        function showAlert(message) {
+            let alertBox = document.createElement('div')
+            alertBox.classList.add('alert-box')
+            alertBox.id = "alert";
+            alertBox.innerHTML = message;
+            document.body.appendChild(alertBox)
+            alertBox.addEventListener('animationend', function() {
+                alertBox.classList.add('disappear')
+                if (flag == "success") {
+                    window.location.href = "index.html";
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
