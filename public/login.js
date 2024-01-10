@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
@@ -29,6 +29,7 @@ document.getElementById("login").addEventListener("click", function() {
         // Signed in 
         const user = userCredential.user;
         console.log(user);
+        window.localStorage.setItem('userID', user.uid);
         showAlert(`&#10004; &nbsp;`+ user.email + "&nbsp; Login successful!");
         flag = "success"
         

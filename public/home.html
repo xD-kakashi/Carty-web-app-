@@ -33,6 +33,10 @@
     </div>
     <i class="fa-regular fa-sun toggler" id="toggler" onclick="lightMode()"></i>
     <script>
+        var userID = window.localStorage.getItem('userID')
+        var userNAME = window.localStorage.getItem('userName')
+        console.log(userID)
+        console.log(userNAME)
         function lightMode () {
             document.body.classList.toggle('light');
             var toggler = document.getElementById('toggler');

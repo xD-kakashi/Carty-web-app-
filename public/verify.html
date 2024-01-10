@@ -58,7 +58,7 @@
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth, isSignInWithEmailLink, signInWithEmailLink, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         // Confirm the link is a sign-in with email link.
         const firebaseConfig = {
           apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
@@ -80,6 +80,8 @@
         // Get the email if available. This should be available if the user completes
         // the flow on the same device where they started it.
         let email = window.localStorage.getItem('emailForSignIn');
+        let password = window.localStorage.getItem('userPass');
+        let username = window.localStorage.getItem('userName');
         if (!email) {
             // User opened the link on a different device. To prevent session fixation
             // attacks, ask the user to provide the associated email again. For example:
@@ -91,7 +93,25 @@
             // Clear email from storage.
             window.localStorage.removeItem('emailForSignIn');
             window.localStorage.setItem('user_details', result.user);
-            showAlert('Verified Successfully!')
+            
+                createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log(user);
+                    flag = "success"
+                    showAlert('Verified Successfully!')
+                    
+                    // ...
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    // ..
+                    console.log(errorMessage);
+                    showAlert(errorMessage)
+                    flag = "error"
+                });
             // You can access the new user via result.user
             // Additional user info profile not available via:
             // result.additionalUserInfo.profile == null
@@ -99,6 +119,7 @@
             // result.additionalUserInfo.isNewUser
             })
             .catch((error) => {
+                showAlert(error.message)
             // Some error occurred, you can inspect the code: error.code
             // Common errors could be invalid email and invalid or expired OTPs.
             });

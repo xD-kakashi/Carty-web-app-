@@ -22,6 +22,8 @@ const database = getDatabase(app);
 
 console.log(app)
 
+var userID = window.localStorage.getItem('userID')
+console.log(userID)
 const inputField = document.getElementById('input-field');
 const addButton = document.getElementById('add-button');
 addButton.addEventListener("click", addToDB);

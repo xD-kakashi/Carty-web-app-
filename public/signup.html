@@ -68,31 +68,14 @@
             var password = document.getElementById("password").value;
             var name = document.getElementById("name").value;
             //For new registration
-            createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                user.displayName = name;
-                console.log(user);
-                
-                flag = "success"
-                
-                // ...
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // ..
-                console.log(errorMessage);
-                showAlert(errorMessage)
-                flag = "error"
-            });
             sendSignInLinkToEmail(auth, email, actionCodeSettings)
             .then(() => {
                 // The link was successfully sent. Inform the user.
                 // Save the email locally so you don't need to ask the user for it again
                 // if they open the link on the same device.
+                window.localStorage.setItem('userName', name);
                 window.localStorage.setItem('emailForSignIn', email);
+                window.localStorage.setItem('userPass', password);
                 showAlert("&#x2713; Verification email sent!");
                 // ...
             })
@@ -101,7 +84,7 @@
                 const errorMessage = error.message;
                 showAlert(errorMessage);
                 // ...
-            });	 		  
+            });		  
         });
         //----- End
         function showAlert(message) {
