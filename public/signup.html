@@ -39,7 +39,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendSignInLinkToEmail } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
@@ -50,6 +50,11 @@
           messagingSenderId: "192709310913",
           appId: "1:192709310913:web:01f48cb77aed7de229d740"
         };
+
+        const actionCodeSettings = {
+            url: 'https://carty-cyan.vercel.app/verify.html',
+            handleCodeInApp: true
+        }
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -69,7 +74,7 @@
                 const user = userCredential.user;
                 user.displayName = name;
                 console.log(user);
-                showAlert("&#x2713; Registration successful!");
+                
                 flag = "success"
                 
                 // ...
@@ -81,6 +86,21 @@
                 console.log(errorMessage);
                 showAlert(errorMessage)
                 flag = "error"
+            });
+            sendSignInLinkToEmail(auth, email, actionCodeSettings)
+            .then(() => {
+                // The link was successfully sent. Inform the user.
+                // Save the email locally so you don't need to ask the user for it again
+                // if they open the link on the same device.
+                window.localStorage.setItem('emailForSignIn', email);
+                showAlert("&#x2713; Verification email sent!");
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                showAlert(errorMessage);
+                // ...
             });	 		  
         });
         //----- End
@@ -93,7 +113,7 @@
             alertBox.addEventListener('animationend', function() {
                 alertBox.classList.add('disappear')
                 if (flag == "success") {	 
-                    window.location.href = "home.html";
+                    
                 }
             })
         }

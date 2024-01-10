@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="shortcut icon" href="carty.png" type="image/x-icon">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+    <script>
+        import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        // Confirm the link is a sign-in with email link.
+        const auth = getAuth();
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+        // Additional state parameters can also be passed via URL.
+        // This can be used to continue the user's intended action before triggering
+        // the sign-in operation.
+        // Get the email if available. This should be available if the user completes
+        // the flow on the same device where they started it.
+        let email = window.localStorage.getItem('emailForSignIn');
+        if (!email) {
+            // User opened the link on a different device. To prevent session fixation
+            // attacks, ask the user to provide the associated email again. For example:
+            email = window.prompt('Please provide your email for confirmation');
+        }
+        // The client SDK will parse the code from the link for you.
+        signInWithEmailLink(auth, email, window.location.href)
+            .then((result) => {
+            // Clear email from storage.
+            window.localStorage.removeItem('emailForSignIn');
+            window.localStorage.setItem('user_details', result.user);
+            showAlert('Verified Successfully!')
+            window.location.href = "home.html";
+            // You can access the new user via result.user
+            // Additional user info profile not available via:
+            // result.additionalUserInfo.profile == null
+            // You can check if the user is new or existing:
+            // result.additionalUserInfo.isNewUser
+            })
+            .catch((error) => {
+            // Some error occurred, you can inspect the code: error.code
+            // Common errors could be invalid email and invalid or expired OTPs.
+            });
+        }
+        function showAlert(message) {
+            let alertBox = document.createElement('div')
+            alertBox.classList.add('alert-box')
+            alertBox.id = "alert";
+            alertBox.innerHTML = message;
+            document.body.appendChild(alertBox)
+            alertBox.addEventListener('animationend', function() {
+                alertBox.classList.add('disappear')
+            })
+        }
+    </script>
+</body>
+</html>
