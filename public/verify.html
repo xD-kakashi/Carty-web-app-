@@ -79,9 +79,7 @@
         // the sign-in operation.
         // Get the email if available. This should be available if the user completes
         // the flow on the same device where they started it.
-        let email = window.localStorage.getItem('emailForSignIn');
-        let password = window.localStorage.getItem('userPass');
-        let username = window.localStorage.getItem('userName');
+
         if (!email) {
             // User opened the link on a different device. To prevent session fixation
             // attacks, ask the user to provide the associated email again. For example:
@@ -93,6 +91,9 @@
             // Clear email from storage.
             window.localStorage.removeItem('emailForSignIn');
             window.localStorage.setItem('user_details', result.user);
+            let email = window.localStorage.getItem('emailForSignIn');
+            let password = window.localStorage.getItem('userPass');
+            let username = window.localStorage.getItem('userName');
             
                 createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
