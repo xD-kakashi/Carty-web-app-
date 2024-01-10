@@ -17,8 +17,21 @@
         }
     </style>
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         // Confirm the link is a sign-in with email link.
+        const firebaseConfig = {
+          apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
+          authDomain: "carty-c96d8.firebaseapp.com",
+          databaseURL: "https://carty-c96d8-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "carty-c96d8",
+          storageBucket: "carty-c96d8.appspot.com",
+          messagingSenderId: "192709310913",
+          appId: "1:192709310913:web:01f48cb77aed7de229d740"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
         const auth = getAuth();
         if (isSignInWithEmailLink(auth, window.location.href)) {
         // Additional state parameters can also be passed via URL.
