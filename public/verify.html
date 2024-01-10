@@ -52,7 +52,6 @@
             window.localStorage.removeItem('emailForSignIn');
             window.localStorage.setItem('user_details', result.user);
             showAlert('Verified Successfully!')
-            window.location.href = "home.html";
             // You can access the new user via result.user
             // Additional user info profile not available via:
             // result.additionalUserInfo.profile == null
@@ -72,6 +71,7 @@
             document.body.appendChild(alertBox)
             alertBox.addEventListener('animationend', function() {
                 alertBox.classList.add('disappear')
+                window.location.href = "home.html";
             })
         }
     </script>
