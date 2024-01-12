@@ -78,7 +78,7 @@
             window.localStorage.setItem('emailForSignIn', email);
             window.localStorage.setItem('userPass', password);
             //For new registration
-            sendEmailVerification(auth.currentUser)
+            sendEmailVerification(actionCodeSettings)
             .then(() => {
                 //Email verification sent
                 console.log('email sent')
