@@ -39,7 +39,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendSignInLinkToEmail, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendSignInLinkToEmail, updateProfile, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
@@ -51,8 +51,15 @@
           appId: "1:192709310913:web:01f48cb77aed7de229d740"
         };
 
-        const actionCodeSettings = {
-            url: 'https://carty-cyan.vercel.app/verify.html',
+        var email =  document.getElementById("email").value;
+
+        var actionCodeSettings = {
+            url: 'https://carty-cyan.vercel.app/verify.html/?email=' + email,
+            android: {
+                packageName: 'com.example.android',
+                installApp: true,
+                minimumVersion: '10'
+            },
             handleCodeInApp: true
         }
       
@@ -64,38 +71,26 @@
 
         //----- New Registration code start	  
         document.getElementById("register").addEventListener("click", function() {
-            var email =  document.getElementById("email").value;
+
             var password = document.getElementById("password").value;
             var name = document.getElementById("name").value;
             window.localStorage.setItem('userName', name);
             window.localStorage.setItem('emailForSignIn', email);
             window.localStorage.setItem('userPass', password);
             //For new registration
+            sendEmailVerification(auth.currentUser)
+            .then(() => {
+                //Email verification sent
+                console.log('email sent')
+                showAlert('Verification Email sent! Please check mailbox')
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                console.log(errorMessage)
+                showAlert(errorMessage)
+            })
 
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    window.localStorage.setItem('userID',user.uid);
-                    console.log(user);
-                    flag = "success"
-                    showAlert('Registered Successfully!')
-                    const first_name = window.localStorage.getItem('userName').split(" ")[0];
-                    const user_name = first_name.charAt(0).toUpperCase()+first_name.slice(1);
-                    updateProfile(auth.currentUser, {
-                        displayName: `${user_name}`
-                    })
-                    
-                    // ...
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    // ..
-                    console.log(errorMessage);
-                    showAlert(errorMessage)
-                    flag = "error"
-                });
+            
             
              		  
         });
