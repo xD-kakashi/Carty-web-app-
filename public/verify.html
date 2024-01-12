@@ -95,24 +95,6 @@
             let password = window.localStorage.getItem('userPass');
             let username = window.localStorage.getItem('userName');
             
-                createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    console.log(user);
-                    flag = "success"
-                    showAlert('Verified Successfully!')
-                    
-                    // ...
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    // ..
-                    console.log(errorMessage);
-                    showAlert(errorMessage)
-                    flag = "error"
-                });
             // You can access the new user via result.user
             // Additional user info profile not available via:
             // result.additionalUserInfo.profile == null

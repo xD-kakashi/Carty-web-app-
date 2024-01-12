@@ -18,8 +18,7 @@
 </head>
 
 <body>
-    <div style="display: none;"><button id="load-button"></button></div>
-    <h1 class="app-title" id="app-title">Carty</h1>
+    <h1 class="app-title" id="app-title"></h1>
     <img src="carty.png" class="carty-img" alt="">
     <div class="input-div container">
         <input type="text" class="input-field" id="input-field" placeholder="Food" autofocus>
@@ -54,7 +53,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, getIdToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, getIdToken, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyCD0GVyT7NFcsF-UCt9dHk753bRZNmhbwo",
@@ -69,6 +68,7 @@
         // Initialize Firebase
         const auth = getAuth();
         console.log(auth)
+        
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // User is signed in, see docs for a list of available properties
@@ -76,11 +76,14 @@
                 const uid = user.uid;
                 console.log(user)
                 console.log(uid);
-                var userId = document.createElement('div')
-                userId.id = "user-id";
-                userId.innerHTML = uid;
-                userId.style.display = "none";
-                document.body.appendChild(userId)
+                const display_name = auth.currentUser.displayName;
+                document.getElementById('app-title').innerHTML = `${display_name}'s Cart`
+                console.log(auth.currentUser.displayName)
+                // var userId = document.createElement('div')
+                // userId.id = "user-id";
+                // userId.innerHTML = uid;
+                // userId.style.display = "none";
+                // document.body.appendChild(userId)
                 // ...
             } else {
                 // User is signed out
@@ -98,7 +101,7 @@
                 showAlert('Sign-out successful.');
                 flag = "success";
                 document.getElementById('logout').style.display = 'none';
-                
+                window.localStorage.removeItem('userID');
                 }).catch((error) => {
                 // An error happened.
                 console.log('An error occured.');
