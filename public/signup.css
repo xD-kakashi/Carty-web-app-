@@ -145,6 +145,7 @@ button:active {
     z-index: 5;
     text-align: center;
     animation: dropIn 2.5s linear;
+    font-family: 'Poppins',sans-serif;
 }
 
 .disappear {
